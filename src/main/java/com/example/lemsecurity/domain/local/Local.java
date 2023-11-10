@@ -26,13 +26,27 @@ public class Local {
     @JoinColumn(name = "responsavel_id", referencedColumnName = "id")
     private Colaborador responsavel;
 
+    private Boolean ativo;
 
-    public Local(DadosCadastroLocal dados){
+
+    public Local(DadosCadastroLocal dados, Colaborador responsavel){
         this.cod = dados.cod();
         this.nome = dados.nome();
         this.descricao = dados.descricao();
-        this.responsavel = dados.responsavel();
+        this.responsavel = responsavel;
+        this.ativo = true;
     }
 
+
+    public void atualizarInformacoes(DadosAtualizacaoLocal dados, Colaborador responsavel) {
+        this.nome = dados.nome() != null ? dados.nome() : this.nome;
+        this.descricao = dados.nome() != null ? dados.nome() : this.nome;
+        this.responsavel = dados.responsavelId() != null ? responsavel : this.responsavel;
+        this.nome = dados.nome() != null ? dados.nome() : this.nome;
+    }
+
+    public void deletar() {
+        this.ativo = false;
+    }
 
 }
