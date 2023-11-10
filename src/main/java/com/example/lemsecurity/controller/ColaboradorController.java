@@ -1,9 +1,6 @@
 package com.example.lemsecurity.controller;
 
-import com.example.lemsecurity.colaborador.Colaborador;
-import com.example.lemsecurity.colaborador.DadosAtualizacaoColaborador;
-import com.example.lemsecurity.colaborador.DadosCadastroColaborador;
-import com.example.lemsecurity.colaborador.DadosListagemColaborador;
+import com.example.lemsecurity.colaborador.*;
 import com.example.lemsecurity.repository.ColaboradorRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -14,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
 
@@ -26,45 +24,46 @@ public class ColaboradorController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<String> cadastrar(@Valid @RequestBody DadosCadastroColaborador dados) {
-        try {
-            Colaborador colaborador = new Colaborador(dados);
-            repository.save(colaborador);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Colaborador cadastrado com sucesso!");
-        }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar colaborador: " + e.getMessage());
-        }
+    public ResponseEntity cadastrar(@Valid @RequestBody DadosCadastroColaborador dados, UriComponentsBuilder uriComponentsBuilder) {
+        Colaborador colaborador = new Colaborador(dados);
+        repository.save(colaborador);
+
+        var uri = uriComponentsBuilder.path("/colaborador/{id}").buildAndExpand(colaborador.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new DadosDetalhamentoColaborador(colaborador));
     }
 
     @GetMapping
-    public Page<DadosListagemColaborador> listarColaboradores(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        return repository.findAll(paginacao).map(DadosListagemColaborador::new);
+    public ResponseEntity<Page<DadosListagemColaborador>> listarColaboradores(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
+        var page = repository.findAll(paginacao).map(DadosListagemColaborador::new);
+        return ResponseEntity.ok(page);
     }
 
 
     @GetMapping("/colaborador/{id}")
-    public ResponseEntity<Colaborador> listaUmColaboradorPorId(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<DadosDetalhamentoColaborador> listaUmColaboradorPorId(@PathVariable(value = "id") Long id) {
         Optional<Colaborador> colaborador = repository.findById(id);
-        return colaborador.map(c -> new ResponseEntity<>(c, HttpStatus.OK))
+        return colaborador.map(c -> ResponseEntity.ok(new DadosDetalhamentoColaborador(c)))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 
     @PutMapping
     @Transactional
-    public void atualizar(@RequestBody @Valid DadosAtualizacaoColaborador dados) {
+    public ResponseEntity<DadosDetalhamentoColaborador> atualizar(@RequestBody @Valid DadosAtualizacaoColaborador dados) {
         var colaborador = repository.getReferenceById(dados.id());
         colaborador.atualizarInformacoes(dados);
+        return ResponseEntity.ok(new DadosDetalhamentoColaborador(colaborador));
     }
 
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void atualizar(@PathVariable(value = "id") Long id) {
+    public ResponseEntity atualizar(@PathVariable(value = "id") Long id) {
         var colaborador = repository.getReferenceById(id);
         colaborador.deletar();
+        return ResponseEntity.noContent().build();
     }
-
 
 
 }
