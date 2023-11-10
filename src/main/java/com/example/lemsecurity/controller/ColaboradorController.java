@@ -1,6 +1,6 @@
 package com.example.lemsecurity.controller;
 
-import com.example.lemsecurity.colaborador.*;
+import com.example.lemsecurity.domain.colaborador.*;
 import com.example.lemsecurity.repository.ColaboradorRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -8,12 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("colaboradores")
@@ -42,9 +39,8 @@ public class ColaboradorController {
 
     @GetMapping("/colaborador/{id}")
     public ResponseEntity<DadosDetalhamentoColaborador> listaUmColaboradorPorId(@PathVariable(value = "id") Long id) {
-        Optional<Colaborador> colaborador = repository.findById(id);
-        return colaborador.map(c -> ResponseEntity.ok(new DadosDetalhamentoColaborador(c)))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Colaborador colaborador = repository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoColaborador(colaborador));
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.lemsecurity.colaborador;
+package com.example.lemsecurity.domain.colaborador;
 
 import jakarta.validation.constraints.NotNull;
 

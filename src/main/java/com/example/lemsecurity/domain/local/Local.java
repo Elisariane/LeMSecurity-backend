@@ -1,6 +1,6 @@
-package com.example.lemsecurity.local;
+package com.example.lemsecurity.domain.local;
 
-import com.example.lemsecurity.colaborador.Colaborador;
+import com.example.lemsecurity.domain.colaborador.Colaborador;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

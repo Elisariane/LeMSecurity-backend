@@ -1,7 +1,7 @@
 package com.example.lemsecurity.controller;
 
-import com.example.lemsecurity.local.DadosCadastroLocal;
-import com.example.lemsecurity.local.Local;
+import com.example.lemsecurity.domain.local.DadosCadastroLocal;
+import com.example.lemsecurity.domain.local.Local;
 import com.example.lemsecurity.repository.LocalRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;

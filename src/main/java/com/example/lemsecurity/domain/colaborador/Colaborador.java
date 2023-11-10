@@ -1,4 +1,4 @@
-package com.example.lemsecurity.colaborador;
+package com.example.lemsecurity.domain.colaborador;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Table(name = "colaboradores")
 @Entity(name = "Colaborador")

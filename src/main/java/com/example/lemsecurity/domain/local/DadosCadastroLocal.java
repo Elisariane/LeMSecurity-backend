@@ -1,5 +1,5 @@
-package com.example.lemsecurity.local;
-import com.example.lemsecurity.colaborador.Colaborador;
+package com.example.lemsecurity.domain.local;
+import com.example.lemsecurity.domain.colaborador.Colaborador;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
